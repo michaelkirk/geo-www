@@ -4,6 +4,10 @@ version = "0.1.0"
 authors = ["Michael Kirk <michael.code@endoftheworl.de>"]
 edition = "2018"
 
+# work around "wasm-opt not available on this platform" error
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
