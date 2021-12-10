@@ -1,12 +1,37 @@
 import * as wasm from "geo-www";
 
+import * as L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
 export async function insertConcaveHullExample(el: HTMLElement) {
     // it's weird that we have to do this... but I think it's required.
     // the wasm module exports are a promise (despite what the type defs say).
     // I *believe* this is an unavoidable condition of working with wasm at the
     // moment, and have yet to see an example to the contrary.
     let geo_www = await wasm;
-    geo_www.greet();
+    // geo_www.greet();
+
+    const map = L.map('map');
+    const defaultCenter = L.latLng(38.889269, -77.050176);
+    const defaultZoom = 15;
+    const basemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    });
+
+    map.setView(defaultCenter, defaultZoom);
+
+    basemap.addTo(map);
+
+    // /* This code is needed to properly load the images in the Leaflet CSS */
+    // delete L.Icon.Default.prototype._getIconUrl;
+    // L.Icon.Default.mergeOptions({
+    //     iconRetinaUrl: iconRetinaUrl,
+    //     iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    //     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+    // });
+    // // Path to marker is broken. See the L.Icon.Default.mergeOptions call for a broken attempted fix.
+    // const marker = L.marker(defaultCenter);
+    // marker.addTo(map);
 
     let canvas = new Canvas();
     el.appendChild(canvas.el);
