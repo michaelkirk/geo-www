@@ -10,17 +10,21 @@ export async function insertConcaveHullExample(el: HTMLElement) {
     // moment, and have yet to see an example to the contrary.
     let geo_www = await wasm;
     // geo_www.greet();
+    let points_of_interest = geo_www.points_of_interest();
+    let convex_hull = geo_www.convex_hull_of_interest();
+    console.log('points of interest:' + points_of_interest);
+    console.log('convex hull:' + convex_hull);
 
     const map = L.map('map');
-    const defaultCenter = L.latLng(38.889269, -77.050176);
-    const defaultZoom = 15;
-    const basemap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
-    });
-
+    const defaultCenter = L.latLng(34.13, -118.28);
+    const defaultZoom = 14;
     map.setView(defaultCenter, defaultZoom);
 
-    basemap.addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+    }).addTo(map);
+
 
     // /* This code is needed to properly load the images in the Leaflet CSS */
     // delete L.Icon.Default.prototype._getIconUrl;
@@ -32,6 +36,23 @@ export async function insertConcaveHullExample(el: HTMLElement) {
     // // Path to marker is broken. See the L.Icon.Default.mergeOptions call for a broken attempted fix.
     // const marker = L.marker(defaultCenter);
     // marker.addTo(map);
+
+    L.geoJSON(points_of_interest, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 8,
+                fillColor: '#ff7800',
+                color: '#000',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            });
+        }
+    }).addTo(map);
+
+    L.geoJSON(convex_hull).addTo(map);
+
+
 
     let canvas = new Canvas();
     el.appendChild(canvas.el);
