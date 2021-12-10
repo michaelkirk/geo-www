@@ -31,7 +31,8 @@ module.exports = {
     plugins: [
         new CopyPlugin({
             patterns: [
-                { from: 'index.html' }
+                { from: 'index.html' },
+                { from: 'water_fountains.geojson' }
             ]
         })
     ],

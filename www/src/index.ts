@@ -9,15 +9,20 @@ export async function insertConcaveHullExample(el: HTMLElement) {
     // I *believe* this is an unavoidable condition of working with wasm at the
     // moment, and have yet to see an example to the contrary.
     let geo_www = await wasm;
+    geo_www.init_panic_hook();
     // geo_www.greet();
     let points_of_interest = geo_www.points_of_interest();
     let convex_hull = geo_www.convex_hull_of_interest();
     console.log('points of interest:' + points_of_interest);
     console.log('convex hull:' + convex_hull);
 
+
     const map = L.map('map');
-    const defaultCenter = L.latLng(34.13, -118.28);
-    const defaultZoom = 14;
+    // griffith
+    //const defaultCenter = L.latLng(34.13, -118.28);
+    // water fountains
+    const defaultCenter = L.latLng(34.04, -118.53);
+    const defaultZoom = 13;
     map.setView(defaultCenter, defaultZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -52,7 +57,23 @@ export async function insertConcaveHullExample(el: HTMLElement) {
 
     L.geoJSON(convex_hull).addTo(map);
 
+    let body = await fetch('water_fountains.geojson');
+    let waterFountainsGeoJSON = await body.json();
+    L.geoJSON(waterFountainsGeoJSON, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, {
+                radius: 4,
+                fillColor: '#334499',
+                color: '#000',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            });
+        }
+    }).addTo(map);
 
+    const waterFountainConvextHull = geo_www.convex_hull(waterFountainsGeoJSON);
+    L.geoJSON(waterFountainConvextHull).addTo(map);
 
     let canvas = new Canvas();
     el.appendChild(canvas.el);
