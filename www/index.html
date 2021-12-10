@@ -1,11 +1,14 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hello wasm-pack!</title>
-  </head>
-  <body>
-    <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
-    <script src="./bootstrap.js"></script>
-  </body>
+    <head>
+        <script src="./bundle.js"></script>
+    </head>
+    <body>
+        <h2>Concave hull</h2>
+        <div id="concave-hull-example">
+        </div>
+        <script>
+            const el = document.getElementById("concave-hull-example");
+            geo_www.insertConcaveHullExample(el);
+        </script>
+    </body>
 </html>

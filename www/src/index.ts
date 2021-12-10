@@ -1,8 +1,13 @@
 import * as wasm from "geo-www";
 
-wasm.greet();
+export async function insertConcaveHullExample(el: HTMLElement) {
+    // it's weird that we have to do this... but I think it's required.
+    // the wasm module exports are a promise (despite what the type defs say).
+    // I *believe* this is an unavoidable condition of working with wasm at the
+    // moment, and have yet to see an example to the contrary.
+    let geo_www = await wasm;
+    geo_www.greet();
 
-function insertConcaveHullExample(el: HTMLElement) {
     let canvas = new Canvas();
     el.appendChild(canvas.el);
 
@@ -25,8 +30,6 @@ function insertConcaveHullExample(el: HTMLElement) {
     canvas.pushDrawables([polygon]);
 
     canvas.render();
-
-    console.log("hello world" + el);
 }
 
 class LineString implements Drawable {
